@@ -1,0 +1,15 @@
+name: SamiPlugin
+version: ${project.version}
+main: com.samifying.plugin.SamiPlugin
+api-version: 1.17
+description: Handles Discord and balance integration
+author: Pequla
+load: STARTUP
+depend: [ Vault, LuckPerms ]
+commands:
+  discord:
+    description: Main command
+    permission: samiplugin.admin
+permissions:
+  samiplugin.admin:
+    description: Admin permission
