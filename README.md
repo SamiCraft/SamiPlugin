@@ -15,9 +15,15 @@ color:
   advancement: 65535
 ```
 
-- `webhook` must be a valid Discord webhook URL, you can find more about Discord Webhooks on [this link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
-- `port` represents the port on witch the Balance API will respond to
+- `webhook` must be a valid Discord Webhook URL, you can find more about Discord Webhooks on [this link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+- `port` represents a TCP port where the Balance API will listen to
 - The color section must contain only valid color decimal or hexadecimal numbers
+
+### Vault Balance API
+
+Real time player balance can be obtained using this HTTP GET endpoint
+
+- `http://api.samifying.com/v1/balance?id=<discord-id>`
 
 ### Libraries used
 
