@@ -23,7 +23,7 @@ color:
 
 Real time player balance can be obtained using this HTTP GET endpoint
 
-- `http://api.samifying.com/v1/balance?id=<discord-id>`
+- `https://api.samifying.com/v1/balance?id=<discord-id>`
 
 ### Libraries used
 
