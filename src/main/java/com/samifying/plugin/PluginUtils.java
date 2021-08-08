@@ -21,16 +21,16 @@ public class PluginUtils {
     }
 
     @NotNull
-    public static HttpURLConnection fetchBackend(String uuid) throws IOException {
-        URL url = new URL(PluginConstants.BACKEND_API + uuid);
+    public static HttpURLConnection fetchBackend(String backend, String uuid) throws IOException {
+        URL url = new URL(backend + uuid);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         return connection;
     }
 
     @NotNull
-    public static HttpURLConnection fetchBackend(Player player) throws IOException {
-        return fetchBackend(trimUniqueId(player));
+    public static HttpURLConnection fetchBackend(String backend, Player player) throws IOException {
+        return fetchBackend(backend, trimUniqueId(player));
     }
 
     public static String getJson(InputStream stream) throws IOException {

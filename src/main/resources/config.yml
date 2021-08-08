@@ -1,4 +1,5 @@
 webhook: url
+backend: https://link.samifying.com/api/user/
 port: 8010
 color:
   system: 65535

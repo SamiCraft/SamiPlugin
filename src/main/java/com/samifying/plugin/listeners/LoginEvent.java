@@ -54,7 +54,7 @@ public class LoginEvent implements Listener {
 
         // Checking if player has been verified
         try {
-            HttpURLConnection con = PluginUtils.fetchBackend(player);
+            HttpURLConnection con = PluginUtils.fetchBackend(plugin.getConfig().getString("backend"), player);
             // Rejecting the player if needed
             if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 BackendError error = PluginUtils.getBackendError(con.getErrorStream());
@@ -70,7 +70,7 @@ public class LoginEvent implements Listener {
             new Thread(() -> {
                 managePermission(player, data.isSupporter(), "group.supporter");
                 managePermission(player, data.isModerator(), "group.mod");
-            },"PermissionManagerThread").start();
+            }, "PermissionManagerThread").start();
 
             // Success log message
             logger.info("User " + data.getName() + " access was permitted");

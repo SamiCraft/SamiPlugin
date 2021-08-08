@@ -10,6 +10,8 @@ commands:
   discord:
     description: Main command
     permission: samiplugin.admin
+  lookup:
+    description: Player lookup
 permissions:
   samiplugin.admin:
     description: Admin permission
