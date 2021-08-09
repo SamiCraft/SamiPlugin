@@ -7,6 +7,7 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.samifying.plugin.atributes.BackendData;
 import com.samifying.plugin.commands.DiscordCommand;
 import com.samifying.plugin.commands.LookupCommand;
+import com.samifying.plugin.commands.LoreCommand;
 import com.samifying.plugin.listeners.CustomMobs;
 import com.samifying.plugin.listeners.DiscordLogs;
 import com.samifying.plugin.listeners.LoginEvent;
@@ -60,6 +61,7 @@ public final class SamiPlugin extends JavaPlugin {
         // Registering commands
         Objects.requireNonNull(getCommand("discord")).setExecutor(new DiscordCommand(this));
         Objects.requireNonNull(getCommand("lookup")).setExecutor(new LookupCommand(this));
+        Objects.requireNonNull(getCommand("lore")).setExecutor(new LoreCommand(this));
 
         // Getting the balance endpoint ready
         getLogger().info("Initializing balance endpoint");

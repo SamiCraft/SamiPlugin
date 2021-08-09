@@ -12,6 +12,8 @@ commands:
     permission: samiplugin.admin
   lookup:
     description: Player lookup
+  lore:
+    description: Change item lore
 permissions:
   samiplugin.admin:
     description: Admin permission
