@@ -36,7 +36,7 @@ public class LookupCommand implements CommandExecutor {
                 sender.sendMessage("Following data was found:\n"
                         + "Player Nickname: " + player.getDisplayName() + ChatColor.RESET + "\n"
                         + "Discord Name: " + ChatColor.AQUA + data.getName() + ChatColor.RESET + "\n"
-                        + "Balance: " + ChatColor.AQUA + balance + ChatColor.RESET + "\n"
+                        + "Balance: " + ChatColor.AQUA + String.format("$%.0f", balance) + ChatColor.RESET + "\n"
                         + "Discord ID: " + ChatColor.AQUA + data.getId() + ChatColor.RESET + "\n"
                         + "Supporter: " + ChatColor.AQUA + data.isSupporter() + ChatColor.RESET + "\n"
                         + "Staff: " + ChatColor.AQUA + data.isModerator()
