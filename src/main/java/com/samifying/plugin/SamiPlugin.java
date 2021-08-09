@@ -171,6 +171,10 @@ public final class SamiPlugin extends JavaPlugin {
         return perms;
     }
 
+    public Economy getEconomy() {
+        return economy;
+    }
+
     @NotNull
     public WebhookEmbed.EmbedFooter getEmbedFooter() {
         return new WebhookEmbed.EmbedFooter(getName() + " | Developed by Pequla#3038", null);

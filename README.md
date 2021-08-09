@@ -1,4 +1,5 @@
 # SamiPlugin
+
 Official HideySMP whitelisting and balance plugin
 
 ### Configuration
@@ -15,7 +16,8 @@ color:
   advancement: 65535
 ```
 
-- `webhook` must be a valid Discord Webhook URL, you can find more about Discord Webhooks on [this link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+- `webhook` must be a valid Discord Webhook URL, you can find more about Discord Webhooks
+  on [this link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - `port` represents a TCP port where the Balance API will listen to
 - The color section must contain only valid color decimal or hexadecimal numbers
 

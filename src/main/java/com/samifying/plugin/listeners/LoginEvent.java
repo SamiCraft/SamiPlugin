@@ -54,7 +54,7 @@ public class LoginEvent implements Listener {
 
         // Checking if player has been verified
         try {
-            HttpURLConnection con = PluginUtils.fetchBackend(plugin.getConfig().getString("backend"), player);
+            HttpURLConnection con = PluginUtils.fetchBackend(player);
             // Rejecting the player if needed
             if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 BackendError error = PluginUtils.getBackendError(con.getErrorStream());
