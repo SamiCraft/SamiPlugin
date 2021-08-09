@@ -102,7 +102,7 @@ public class LoginEvent implements Listener {
                 plugin.sendCustomisedEmbed(player, new WebhookEmbedBuilder()
                         .setColor(color)
                         .setTitle(new WebhookEmbed.EmbedTitle("**" + player.getName().toUpperCase() + " JOINED**", null))
-                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getName(), data.getAvatar(), null))
+                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
                         .setDescription(player.getName() + " just joined the game")
                         .addField(new WebhookEmbed.EmbedField(false, "Currently online:", online))
                         .setFooter(new WebhookEmbed.EmbedFooter(data.getId(), null))
