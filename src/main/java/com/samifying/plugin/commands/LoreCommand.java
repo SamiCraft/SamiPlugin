@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 public class LoreCommand implements CommandExecutor, TabCompleter {
 
+    private static final String PERMISSION = "sami.plugin.lore";
     private final List<String> availableCommands;
     private final SamiPlugin plugin;
 
@@ -32,6 +34,11 @@ public class LoreCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission(PERMISSION)) {
+            sender.sendMessage(ChatColor.RED + "You don't have permissions to use this command");
+            return false;
+        }
+
         if (!(sender instanceof Player player)) {
             sender.sendMessage("You have to be a player");
             return false;
@@ -58,14 +65,17 @@ public class LoreCommand implements CommandExecutor, TabCompleter {
             }
             OfflinePlayer offline = Bukkit.getOfflinePlayer(player.getUniqueId());
             double balance = plugin.getEconomy().getBalance(offline);
-            if (balance > 1500.0) {
+            double price = stack.getAmount() * 1500.0;
+            if (balance > price) {
                 plugin.getEconomy().withdrawPlayer(offline, 1500.0);
-                meta.setLore(Arrays.asList("This is the first line", "Hello from 2nd one"));
+                List<String> lore = new ArrayList<>();
+                lore.add(generate(args));
+                meta.setLore(lore);
                 stack.setItemMeta(meta);
-                player.sendMessage(ChatColor.GREEN + "Successfully changed lore, $1500 was removed from your balance");
+                player.sendMessage(ChatColor.GREEN + "Successfully changed lore, " + String.format("$%.0f", price) + " was removed from your balance");
                 return true;
             }
-            player.sendMessage(ChatColor.RED + "You are broke, it costs $1500 to change the lore");
+            player.sendMessage(ChatColor.RED + "You are broke, it costs" + String.format("$%.0f", price) + " to change the lore");
             return false;
         }
         player.sendMessage(ChatColor.GOLD + "Usage: /lore set <text> or /lore reset");
@@ -81,5 +91,10 @@ public class LoreCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         }
         return null;
+    }
+
+    @NotNull
+    private String generate(String[] args) {
+        return String.join(" ", Arrays.copyOfRange(args, 1, args.length));
     }
 }

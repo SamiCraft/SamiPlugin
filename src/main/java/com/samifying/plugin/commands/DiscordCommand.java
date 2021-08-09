@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class DiscordCommand implements CommandExecutor, TabCompleter {
 
+    private static final String PERMISSION = "sami.plugin.discord";
     private final List<String> availableCommands;
     private final SamiPlugin plugin;
 
@@ -26,6 +27,10 @@ public class DiscordCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission(PERMISSION)) {
+            dispatchMessage(sender,"You don't have permissions to use this command");
+            return false;
+        }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")) {
                 plugin.reloadConfig();

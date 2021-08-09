@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LookupCommand implements CommandExecutor {
 
+    private static final String PERMISSION = "sami.plugin.lookup";
     private final SamiPlugin plugin;
 
     public LookupCommand(SamiPlugin plugin) {
@@ -20,6 +21,10 @@ public class LookupCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission(PERMISSION)) {
+            sender.sendMessage(ChatColor.RED + "You don't have permissions to use this command");
+            return false;
+        }
         new Thread(() -> {
             if (args.length == 1) {
                 // Getting the player

@@ -8,12 +8,18 @@ load: STARTUP
 depend: [ Vault, LuckPerms ]
 commands:
   discord:
-    description: Main command
-    permission: samiplugin.admin
+    description: Admin command
+    permission: sami.plugin.discord
   lookup:
     description: Player lookup
+    permission: sami.plugin.lookup
   lore:
     description: Change item lore
+    permission: sami.plugin.lore
 permissions:
-  samiplugin.admin:
-    description: Admin permission
+  sami.plugin.discord:
+    description: Discord command permission
+  sami.plugin.lookup:
+    description: Lookup command permission
+  sami.plugin.lore:
+    description: Lore command permission
