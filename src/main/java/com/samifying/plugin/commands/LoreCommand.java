@@ -75,7 +75,7 @@ public class LoreCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(ChatColor.GREEN + "Successfully changed lore, " + String.format("$%.0f", price) + " was removed from your balance");
                 return true;
             }
-            player.sendMessage(ChatColor.RED + "You are broke, it costs" + String.format("$%.0f", price) + " to change the lore");
+            player.sendMessage(ChatColor.RED + "You are broke, it costs " + String.format("$%.0f", price) + " to change the lore");
             return false;
         }
         player.sendMessage(ChatColor.GOLD + "Usage: /lore set <text> or /lore reset");
