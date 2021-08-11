@@ -2,6 +2,7 @@ package com.samifying.plugin.listeners;
 
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
 import com.samifying.plugin.atributes.BackendData;
 import org.apache.commons.lang.StringUtils;
@@ -12,12 +13,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 public class DiscordLogs implements Listener {
@@ -33,14 +36,8 @@ public class DiscordLogs implements Listener {
     @EventHandler
     public void onWorldLoadEvent(@NotNull WorldLoadEvent event) {
         new Thread(() -> {
-            if (plugin.getMainServerWorld().equals(event.getWorld())) {
-                plugin.getWebhook().send(new WebhookEmbedBuilder()
-                        .setColor(config.getInt("color.system"))
-                        .setTitle(new WebhookEmbed.EmbedTitle("**LOADING THE WORLD**", null))
-                        .setDescription("Loading the world, please wait")
-                        .setFooter(plugin.getEmbedFooter())
-                        .setTimestamp(Instant.now())
-                        .build());
+            if (plugin.getServer().getWorlds().get(0).equals(event.getWorld())) {
+                plugin.sendSystemEmbed("Loading the world");
                 plugin.getLogger().info("World load message dispatched");
             }
         }, "WorldLoadDispatcher").start();
@@ -50,16 +47,29 @@ public class DiscordLogs implements Listener {
     public void onServerLoadEvent(@NotNull ServerLoadEvent event) {
         new Thread(() -> {
             if (event.getType() == ServerLoadEvent.LoadType.STARTUP) {
-                plugin.getWebhook().send(new WebhookEmbedBuilder()
-                        .setColor(config.getInt("color.system"))
-                        .setTitle(new WebhookEmbed.EmbedTitle("**SERVER LOADED**", null))
-                        .setDescription("Server has successfully loaded, players can join now")
-                        .setFooter(plugin.getEmbedFooter())
-                        .setTimestamp(Instant.now())
-                        .build());
+                plugin.sendSystemEmbed("Server loaded");
                 plugin.getLogger().info("Server loaded message dispatched");
             }
         }, "ServerLoadDispatcher").start();
+    }
+
+    @EventHandler
+    public void onPlayerJoinEvent(@NotNull PlayerJoinEvent event) {
+        new Thread(() -> {
+            Player player = event.getPlayer();
+            BackendData data = plugin.getPlayers().get(player.getUniqueId());
+            if (data != null) {
+                int color = config.getInt("color.join");
+                if (data.getId().equals(SamiPlugin.SAMI_USER_ID)) {
+                    color = config.getInt("color.sami");
+                }
+                plugin.sendWebhookEmbed(player, data, color,
+                        PluginUtils.sanitize(player.getName() + " joined the game"),
+                        new WebhookEmbedBuilder().addField(currentlyOnline(event))
+                );
+                plugin.getLogger().info("Player join message dispatched");
+            }
+        }, "PlayerJoinDispatcher").start();
     }
 
     @EventHandler
@@ -70,17 +80,10 @@ public class DiscordLogs implements Listener {
             BackendData data = plugin.getPlayers().get(uuid);
             if (data != null) {
                 plugin.getPlayers().remove(uuid, data);
-                Server server = plugin.getServer();
-                String online = (server.getOnlinePlayers().size() - 1) + "/" + server.getMaxPlayers();
-                plugin.sendCustomisedEmbed(player, new WebhookEmbedBuilder()
-                        .setColor(config.getInt("color.leave"))
-                        .setTitle(new WebhookEmbed.EmbedTitle("**" + player.getName().toUpperCase() + " LEFT**", null))
-                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
-                        .setDescription(player.getName() + " just left the game")
-                        .addField(new WebhookEmbed.EmbedField(false, "Currently online:", online))
-                        .setFooter(new WebhookEmbed.EmbedFooter(data.getId(), null))
-                        .setTimestamp(Instant.now())
-                        .build());
+                plugin.sendWebhookEmbed(player, data, config.getInt("color.leave"),
+                        PluginUtils.sanitize(player.getName() + " left the game"),
+                        new WebhookEmbedBuilder().addField(currentlyOnline(event))
+                );
                 plugin.getLogger().info("Player leave message dispatched");
             }
         }, "PlayerQuitDispatcher").start();
@@ -90,17 +93,12 @@ public class DiscordLogs implements Listener {
     public void onPlayerDeathEvent(@NotNull PlayerDeathEvent event) {
         new Thread(() -> {
             Player player = event.getEntity();
-            UUID uuid = player.getUniqueId();
-            BackendData data = plugin.getPlayers().get(uuid);
+            BackendData data = plugin.getPlayers().get(player.getUniqueId());
             if (data != null) {
-                plugin.sendCustomisedEmbed(player, new WebhookEmbedBuilder()
-                        .setColor(config.getInt("color.death"))
-                        .setTitle(new WebhookEmbed.EmbedTitle("**" + player.getName().toUpperCase() + " DIED**", null))
-                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
-                        .setDescription(event.getDeathMessage())
-                        .setFooter(new WebhookEmbed.EmbedFooter(data.getId(), null))
-                        .setTimestamp(Instant.now())
-                        .build());
+                plugin.sendWebhookEmbed(player, data, config.getInt("color.death"),
+                        PluginUtils.sanitize(Objects.requireNonNull(event.getDeathMessage())),
+                        new WebhookEmbedBuilder()
+                );
                 plugin.getLogger().info("Player death message dispatched");
             }
         }, "PlayerDeathDispatcher").start();
@@ -116,22 +114,27 @@ public class DiscordLogs implements Listener {
             }
             String category = StringUtils.capitalize(advancement[0]);
             String name = StringUtils.capitalize(advancement[1].replace("_", " "));
+            String format = String.format("%s: %s", category, name);
 
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
             BackendData data = plugin.getPlayers().get(uuid);
             if (data != null) {
-                plugin.sendCustomisedEmbed(player, new WebhookEmbedBuilder()
-                        .setColor(config.getInt("color.advancement"))
-                        .setTitle(new WebhookEmbed.EmbedTitle("**" + player.getName().toUpperCase() + " MADE AN ADVANCEMENT**", null))
-                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
-                        .addField(new WebhookEmbed.EmbedField(false, "Category:", category))
-                        .addField(new WebhookEmbed.EmbedField(false, "Name:", name))
-                        .setFooter(new WebhookEmbed.EmbedFooter(data.getId(), null))
-                        .setTimestamp(Instant.now())
-                        .build());
-                plugin.getLogger().info("Player death message dispatched");
+                plugin.sendWebhookEmbed(player, data, config.getInt("color.advancement"),
+                        PluginUtils.sanitize(player.getName() + " made an advancement"),
+                        new WebhookEmbedBuilder()
+                                .addField(new WebhookEmbed.EmbedField(false, "Advancement:", format))
+                );
+                plugin.getLogger().info("Player advancement made message dispatched");
             }
         }, "PlayerAdvancementDispatcher").start();
+    }
+
+    @NotNull
+    private WebhookEmbed.EmbedField currentlyOnline(PlayerEvent event) {
+        Server server = plugin.getServer();
+        int i = (event instanceof PlayerQuitEvent) ? 1 : 0;
+        String online = String.format("%s/%s", server.getOnlinePlayers().size() - i, server.getMaxPlayers());
+        return new WebhookEmbed.EmbedField(false, "Online:", online);
     }
 }

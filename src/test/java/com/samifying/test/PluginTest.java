@@ -1,7 +1,7 @@
 package com.samifying.test;
 
-import com.samifying.plugin.PluginConstants;
 import com.samifying.plugin.PluginUtils;
+import com.samifying.plugin.SamiPlugin;
 import com.samifying.plugin.atributes.BackendData;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class PluginTest {
     public void isBackendReachable() throws IOException {
         HttpURLConnection connection = PluginUtils.fetchBackend("06805a4280d0463dbf7151b1e1317cd4");
         BackendData data = PluginUtils.getBackendData(connection.getInputStream());
-        Assert.assertEquals(PluginConstants.PEQULA_USER_ID, data.getId());
+        Assert.assertEquals(SamiPlugin.PEQULA_USER_ID, data.getId());
     }
 
 }

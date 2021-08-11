@@ -53,4 +53,16 @@ public class PluginUtils {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, BackendError.class);
     }
+
+    @NotNull
+    public static String sanitize(@NotNull String string) {
+        return string
+                .replace("*", "")
+                .replace("_", "")
+                .replace("#", "")
+                .replace(">", "")
+                .replace("-", "")
+                .replace("`", "")
+                .replace("|", "");
+    }
 }

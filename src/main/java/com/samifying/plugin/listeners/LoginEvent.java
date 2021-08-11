@@ -1,9 +1,6 @@
 package com.samifying.plugin.listeners;
 
 
-import club.minnced.discord.webhook.send.WebhookEmbed;
-import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
-import com.samifying.plugin.PluginConstants;
 import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
 import com.samifying.plugin.atributes.BackendData;
@@ -13,7 +10,6 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 import net.luckperms.api.node.Node;
 import org.bukkit.Server;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +18,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.HttpURLConnection;
-import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
@@ -90,26 +85,6 @@ public class LoginEvent implements Listener {
                 plugin.getPlayers().put(player.getUniqueId(), data);
                 logger.info("Player data successfully saved");
             }
-
-            // Dispatching a message to Discord
-            new Thread(() -> {
-                FileConfiguration config = plugin.getConfig();
-                int color = config.getInt("color.join");
-                if (data.getId().equals(PluginConstants.SAMI_USER_ID)) {
-                    color = config.getInt("color.sami");
-                }
-                String online = (server.getOnlinePlayers().size() + 1) + "/" + server.getMaxPlayers();
-                plugin.sendCustomisedEmbed(player, new WebhookEmbedBuilder()
-                        .setColor(color)
-                        .setTitle(new WebhookEmbed.EmbedTitle("**" + player.getName().toUpperCase() + " JOINED**", null))
-                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
-                        .setDescription(player.getName() + " just joined the game")
-                        .addField(new WebhookEmbed.EmbedField(false, "Currently online:", online))
-                        .setFooter(new WebhookEmbed.EmbedFooter(data.getId(), null))
-                        .setTimestamp(Instant.now())
-                        .build());
-                logger.info("Player join message dispatched");
-            }, "JoinMessageDispatcher").start();
         } catch (Exception e) {
             // On any error player will get kicked
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Unexpected error");

@@ -14,7 +14,6 @@ import com.samifying.plugin.listeners.LoginEvent;
 import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -25,9 +24,15 @@ import org.jetbrains.annotations.Nullable;
 import spark.Spark;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public final class SamiPlugin extends JavaPlugin {
+
+    public static final String SAMI_USER_ID = "179261209529417729";
+    public static final String PEQULA_USER_ID = "358236836113547265";
 
     private final WebhookClient webhook;
     private final Map<UUID, BackendData> players;
@@ -83,46 +88,25 @@ public final class SamiPlugin extends JavaPlugin {
                     }
                 }
             }
-            return "Unknown";
+            return "Player offline";
         });
 
         // Discord notification
         new Thread(() -> {
-            webhook.send(new WebhookEmbedBuilder()
-                    .setColor(getConfig().getInt("color.system"))
-                    .setTitle(new WebhookEmbed.EmbedTitle("**SERVER STARTING**", null))
-                    .setDescription("Plugin loaded, please wait")
-                    .setFooter(getEmbedFooter())
-                    .setTimestamp(Instant.now())
-                    .build());
+            sendSystemEmbed("Server starting");
             getLogger().info("Plugin loaded, webhook message dispatched");
-        },"PluginEnabledDispatcher").start();
+        }, "PluginEnabledDispatcher").start();
     }
 
     @Override
     public void onDisable() {
         // Discord notification
-        webhook.send(new WebhookEmbedBuilder()
-                .setColor(getConfig().getInt("color.system"))
-                .setTitle(new WebhookEmbed.EmbedTitle("**SERVER STOPPED**", null))
-                .setDescription("Server stopped successfully")
-                .setFooter(getEmbedFooter())
-                .setTimestamp(Instant.now())
-                .build());
+        sendSystemEmbed("Server stopped");
         getLogger().info("Server stopping message dispatched");
 
         // Closing Discord Webhook connection
         webhook.close();
         getLogger().info("Plugin unloaded, webhook connection closed");
-    }
-
-    public World getMainServerWorld() {
-        List<World> worlds = getServer().getWorlds();
-        return worlds.get(0);
-    }
-
-    public WebhookClient getWebhook() {
-        return webhook;
     }
 
     public synchronized Map<UUID, BackendData> getPlayers() {
@@ -161,11 +145,26 @@ public final class SamiPlugin extends JavaPlugin {
         return null;
     }
 
-    public void sendCustomisedEmbed(@NotNull Player player, WebhookEmbed embed) {
+    public void sendWebhookEmbed(@NotNull Player player, @NotNull BackendData data, int color,
+                                 String title, @NotNull WebhookEmbedBuilder builder) {
         webhook.send(new WebhookMessageBuilder()
                 .setUsername(player.getName())
-                .setAvatarUrl(PluginConstants.AVATAR_API.replace("%uuid%", PluginUtils.trimUniqueId(player)))
-                .addEmbeds(embed)
+                .setAvatarUrl("https://crafatar.com/avatars/" + player.getUniqueId() + "?default=MHF_Steve")
+                .addEmbeds(builder
+                        .setColor(color)
+                        .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
+                        .setDescription("**" + title + "**")
+                        .setFooter(new WebhookEmbed.EmbedFooter(data.getId(), null))
+                        .setTimestamp(Instant.now())
+                        .build())
+                .build());
+    }
+
+    public void sendSystemEmbed(String message) {
+        webhook.send(new WebhookEmbedBuilder()
+                .setColor(getConfig().getInt("color.system"))
+                .setDescription("**" + message + "**")
+                .setTimestamp(Instant.now())
                 .build());
     }
 
@@ -175,10 +174,5 @@ public final class SamiPlugin extends JavaPlugin {
 
     public Economy getEconomy() {
         return economy;
-    }
-
-    @NotNull
-    public WebhookEmbed.EmbedFooter getEmbedFooter() {
-        return new WebhookEmbed.EmbedFooter(getName() + " | Developed by Pequla#3038", null);
     }
 }
