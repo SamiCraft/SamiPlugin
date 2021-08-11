@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Turtle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,6 +30,12 @@ public class CustomMobs implements Listener {
             event.getDrops().clear();
             ItemStack stack = new ItemStack(Material.ELYTRA, 1);
             entity.getWorld().dropItemNaturally(entity.getLocation(), stack);
+            return;
+        }
+        if (entity instanceof Turtle turtle && turtle.isAdult()) {
+            event.getDrops().clear();
+            ItemStack stack = new ItemStack(Material.SCUTE, 2);
+            turtle.getWorld().dropItemNaturally(turtle.getLocation(), stack);
         }
     }
 
@@ -41,7 +48,7 @@ public class CustomMobs implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onEntityExplodeEvent(EntityExplodeEvent event) {
+    public void onEntityExplodeEvent(@NotNull EntityExplodeEvent event) {
         if (event.getEntity().getType() == EntityType.ENDER_DRAGON) {
             event.setCancelled(true);
         }
