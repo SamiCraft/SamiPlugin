@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class PluginUtils {
 
@@ -33,23 +34,23 @@ public class PluginUtils {
         return fetchBackend(trimUniqueId(player));
     }
 
-    public static String getJson(InputStream stream) throws IOException {
+    public static String getJson(InputStream stream, Logger logger) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(stream));
         String json = in.readLine();
-        System.out.println(json); // Debug
+        logger.info(json); // Debug
         return json;
     }
 
 
-    public static BackendData getBackendData(InputStream stream) throws IOException {
-        String json = getJson(stream);
+    public static BackendData getBackendData(InputStream stream, Logger logger) throws IOException {
+        String json = getJson(stream, logger);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, BackendData.class);
     }
 
 
-    public static BackendError getBackendError(InputStream stream) throws IOException {
-        String json = getJson(stream);
+    public static BackendError getBackendError(InputStream stream, Logger logger) throws IOException {
+        String json = getJson(stream, logger);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(json, BackendError.class);
     }

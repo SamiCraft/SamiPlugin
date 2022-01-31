@@ -1,7 +1,7 @@
 name: SamiPlugin
 version: ${project.version}
 main: com.samifying.plugin.SamiPlugin
-api-version: 1.17
+api-version: 1.18
 description: Handles Discord and balance integration
 author: Pequla
 load: STARTUP

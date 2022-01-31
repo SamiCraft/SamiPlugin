@@ -52,14 +52,14 @@ public class LoginEvent implements Listener {
             HttpURLConnection con = PluginUtils.fetchBackend(player);
             // Rejecting the player if needed
             if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                BackendError error = PluginUtils.getBackendError(con.getErrorStream());
+                BackendError error = PluginUtils.getBackendError(con.getErrorStream(), logger);
                 logger.info("Player " + player.getName() + " was rejected");
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, error.getMessage());
                 return;
             }
 
             // Mapping and registering the object
-            BackendData data = PluginUtils.getBackendData(con.getInputStream());
+            BackendData data = PluginUtils.getBackendData(con.getInputStream(), logger);
 
             // Managing the permissions
             new Thread(() -> {
