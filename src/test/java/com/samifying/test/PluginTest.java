@@ -15,7 +15,7 @@ public class PluginTest {
     @Test
     public void isBackendReachable() throws IOException {
         HttpURLConnection connection = PluginUtils.fetchBackend("06805a4280d0463dbf7151b1e1317cd4");
-        BackendData data = PluginUtils.getBackendData(connection.getInputStream(), Logger.getLogger(PluginTest.class.getName()));
+        BackendData data = PluginUtils.getBackendData(connection.getInputStream());
         Assert.assertEquals(SamiPlugin.PEQULA_USER_ID, data.getId());
     }
 

@@ -10,6 +10,7 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 import net.luckperms.api.node.Node;
 import org.bukkit.Server;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,10 +26,12 @@ public class LoginEvent implements Listener {
 
     private final SamiPlugin plugin;
     private final Logger logger;
+    private final FileConfiguration config;
 
     public LoginEvent(@NotNull SamiPlugin plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
+        this.config = plugin.getConfig();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -52,14 +55,14 @@ public class LoginEvent implements Listener {
             HttpURLConnection con = PluginUtils.fetchBackend(player);
             // Rejecting the player if needed
             if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                BackendError error = PluginUtils.getBackendError(con.getErrorStream(), logger);
+                BackendError error = PluginUtils.getBackendError(con.getErrorStream());
                 logger.info("Player " + player.getName() + " was rejected");
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, error.getMessage());
                 return;
             }
 
             // Mapping and registering the object
-            BackendData data = PluginUtils.getBackendData(con.getInputStream(), logger);
+            BackendData data = PluginUtils.getBackendData(con.getInputStream());
 
             // Managing the permissions
             new Thread(() -> {
@@ -67,12 +70,18 @@ public class LoginEvent implements Listener {
                 managePermission(player, data.isModerator(), "group.mod");
             }, "PermissionManagerThread").start();
 
+            // Maintenance mode
+            if (config.getBoolean("enable.maintenance") && !data.isModerator()) {
+                logger.info("Player " + player.getName() + " was rejected, maintenance in progress");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Server is under maintenance");
+                return;
+            }
+
             // Success log message
             logger.info("User " + data.getName() + " access was permitted");
 
-
-            // Allowing the supporters to bypass player slot limit
-            if (data.isModerator() || data.isSupporter()) {
+            // Allowing staff and supporters to bypass player slot limit
+            if (data.isModerator() || (config.getBoolean("enable.supporter-bypass") && data.isSupporter())) {
                 if (event.getResult() == PlayerLoginEvent.Result.KICK_FULL) {
                     event.allow();
                     logger.info("User " + data.getName() + " bypassed player limit");

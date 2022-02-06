@@ -106,6 +106,7 @@ public class DiscordLogs implements Listener {
 
     @EventHandler
     public void onPlayerAdvancementDoneEvent(@NotNull PlayerAdvancementDoneEvent event) {
+        if (!config.getBoolean("enable.advancements")) return;
         new Thread(() -> {
             String[] advancement = event.getAdvancement().getKey().getKey().split("/");
             // Recipes should not be displayed

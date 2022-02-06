@@ -7,6 +7,11 @@ Official HideySMP whitelisting and balance plugin
 ```yaml
 webhook: url
 port: 8010
+enable:
+  advancements: false
+  balance-api: false
+  supporter-bypass: false
+  maintenance: false
 color:
   system: 65535
   join: 65280

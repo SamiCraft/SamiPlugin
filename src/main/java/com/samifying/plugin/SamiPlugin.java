@@ -69,27 +69,29 @@ public final class SamiPlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand("lore")).setExecutor(new LoreCommand(this));
 
         // Getting the balance endpoint ready
-        getLogger().info("Initializing balance endpoint");
-        Spark.port(getConfig().getInt("port"));
-        Spark.after((request, response) -> {
-            response.header("Access-Control-Allow-Origin", "*");
-            response.header("Access-Control-Allow-Methods", "GET");
-        });
-        Spark.get("v1/balance", "application/json", (request, response) -> {
-            // Retrieving the uuid
-            UUID uuid = getUniqueIdFromDiscordId(request.queryParams("id"));
-            if (uuid != null) {
-                // Retrieving the player
-                for (OfflinePlayer player : getServer().getOfflinePlayers()) {
-                    if (Objects.equals(uuid, player.getUniqueId())) {
-                        // its a match
-                        double balance = economy.getBalance(player);
-                        return String.format("$%.0f", balance);
+        if (getConfig().getBoolean("enable.balance-api")) {
+            getLogger().info("Initializing balance endpoint");
+            Spark.port(getConfig().getInt("port"));
+            Spark.after((request, response) -> {
+                response.header("Access-Control-Allow-Origin", "*");
+                response.header("Access-Control-Allow-Methods", "GET");
+            });
+            Spark.get("v1/balance", "application/json", (request, response) -> {
+                // Retrieving the uuid
+                UUID uuid = getUniqueIdFromDiscordId(request.queryParams("id"));
+                if (uuid != null) {
+                    // Retrieving the player
+                    for (OfflinePlayer player : getServer().getOfflinePlayers()) {
+                        if (Objects.equals(uuid, player.getUniqueId())) {
+                            // its a match
+                            double balance = economy.getBalance(player);
+                            return String.format("$%.0f", balance);
+                        }
                     }
                 }
-            }
-            return "Player offline";
-        });
+                return "Player offline";
+            });
+        }
 
         // Discord notification
         new Thread(() -> {
