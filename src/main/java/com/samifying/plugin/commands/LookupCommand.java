@@ -1,5 +1,6 @@
 package com.samifying.plugin.commands;
 
+import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
 import com.samifying.plugin.atributes.BackendData;
 import org.bukkit.Bukkit;
@@ -41,6 +42,7 @@ public class LookupCommand implements CommandExecutor {
                 sender.sendMessage("Following data was found:\n"
                         + "Player Nickname: " + player.getDisplayName() + ChatColor.RESET + "\n"
                         + "Discord Name: " + ChatColor.AQUA + data.getName() + ChatColor.RESET + "\n"
+                        + "Discord Nickname: " + ChatColor.AQUA + data.getNickname() + ChatColor.RESET + "\n"
                         + "Balance: " + ChatColor.AQUA + String.format("$%.0f", balance) + ChatColor.RESET + "\n"
                         + "Discord ID: " + ChatColor.AQUA + data.getId() + ChatColor.RESET + "\n"
                         + "Supporter: " + ChatColor.AQUA + data.isSupporter() + ChatColor.RESET + "\n"
