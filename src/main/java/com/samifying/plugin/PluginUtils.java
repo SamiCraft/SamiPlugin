@@ -21,16 +21,16 @@ public class PluginUtils {
     }
 
     @NotNull
-    public static HttpURLConnection fetchBackend(String uuid) throws IOException {
-        URL url = new URL("https://link.samifying.com/api/user/" + uuid);
+    public static HttpURLConnection fetchBackend(String uuid, String guild, String role) throws IOException {
+        URL url = new URL("https://link.samifying.com/api/user/" + uuid + "?guild=" + guild + "&role=" + role);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         return connection;
     }
 
     @NotNull
-    public static HttpURLConnection fetchBackend(Player player) throws IOException {
-        return fetchBackend(trimUniqueId(player));
+    public static HttpURLConnection fetchBackend(Player player, String guild, String role) throws IOException {
+        return fetchBackend(trimUniqueId(player), guild, role);
     }
 
     public static String getJson(InputStream stream) throws IOException {

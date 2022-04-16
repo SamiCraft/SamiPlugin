@@ -1,5 +1,7 @@
 webhook: url
 port: 8010
+guild: 264801645370671114
+role: 426156903555399680
 enable:
   advancements: false
   balance-api: false
