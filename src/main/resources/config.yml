@@ -1,7 +1,10 @@
 webhook: url
 port: 8010
-guild: 264801645370671114
-role: 426156903555399680
+auth:
+  guild: 264801645370671114
+  role: 426156903555399680
+  staff: 826927279098953739
+  supporter: 743861104819830854
 enable:
   advancements: false
   balance-api: false

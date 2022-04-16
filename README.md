@@ -7,8 +7,11 @@ Official HideySMP whitelisting and balance plugin
 ```yaml
 webhook: url
 port: 8010
-guild: 264801645370671114
-role: 426156903555399680
+auth:
+  guild: 264801645370671114
+  role: 426156903555399680
+  staff: 826927279098953739
+  supporter: 743861104819830854
 enable:
   advancements: false
   balance-api: false
@@ -26,11 +29,13 @@ color:
 - `webhook` must be a valid Discord Webhook URL, you can find more about Discord Webhooks
   on [this link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - `port` represents a TCP port where the Balance API will listen to
-- `guid` is a discord server id you want to use for verification
-- `role` is a role you want to use for verification
+- `auth.guild` is a discord server id you want to use for verification
+- `auth.role` is a role you want to use for verification
+- `auth.staff` is the staff role id
+- `auth.supporter` represents a supporter only channel id
 - The color section must contain only valid color decimal or hexadecimal numbers
 
-> Guild is set by default to [Sami's Hidey Hole](http://discord.gg/samifying) and role to the Media role. Make sure that the role in your configuration is from the guild
+> Guild is set by default to [Sami's Hidey Hole](http://discord.gg/samifying) and role to the Media role. Make sure that the roles and channels in your configuration are from the correct guild
 
 ### Vault Balance API
 

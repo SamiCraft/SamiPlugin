@@ -54,8 +54,10 @@ public class LoginEvent implements Listener {
         try {
             HttpURLConnection con = PluginUtils.fetchBackend(
                     player,
-                    config.getString("guild"),
-                    config.getString("role")
+                    config.getString("auth.guild"),
+                    config.getString("auth.role"),
+                    config.getString("auth.staff"),
+                    config.getString("auth.supporter")
             );
             // Rejecting the player if needed
             if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
