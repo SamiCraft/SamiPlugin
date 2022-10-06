@@ -4,7 +4,7 @@ import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
-import com.samifying.plugin.atributes.BackendData;
+import com.samifying.plugin.models.BackendData;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;

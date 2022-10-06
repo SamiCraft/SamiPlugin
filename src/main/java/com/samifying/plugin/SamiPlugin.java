@@ -4,7 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import com.samifying.plugin.atributes.BackendData;
+import com.samifying.plugin.models.BackendData;
 import com.samifying.plugin.commands.DiscordCommand;
 import com.samifying.plugin.commands.LookupCommand;
 import com.samifying.plugin.commands.LoreCommand;

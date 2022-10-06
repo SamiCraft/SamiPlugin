@@ -1,8 +1,7 @@
 package com.samifying.plugin.commands;
 
-import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
-import com.samifying.plugin.atributes.BackendData;
+import com.samifying.plugin.models.BackendData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

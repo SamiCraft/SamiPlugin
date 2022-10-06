@@ -3,8 +3,8 @@ package com.samifying.plugin.listeners;
 
 import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
-import com.samifying.plugin.atributes.BackendData;
-import com.samifying.plugin.atributes.BackendError;
+import com.samifying.plugin.models.BackendData;
+import com.samifying.plugin.models.BackendError;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;

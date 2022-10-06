@@ -1,8 +1,8 @@
 package com.samifying.plugin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.samifying.plugin.atributes.BackendData;
-import com.samifying.plugin.atributes.BackendError;
+import com.samifying.plugin.models.BackendData;
+import com.samifying.plugin.models.BackendError;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

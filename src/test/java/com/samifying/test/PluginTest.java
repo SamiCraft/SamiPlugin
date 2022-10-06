@@ -2,13 +2,12 @@ package com.samifying.test;
 
 import com.samifying.plugin.PluginUtils;
 import com.samifying.plugin.SamiPlugin;
-import com.samifying.plugin.atributes.BackendData;
+import com.samifying.plugin.models.BackendData;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.logging.Logger;
 
 public class PluginTest {
 
