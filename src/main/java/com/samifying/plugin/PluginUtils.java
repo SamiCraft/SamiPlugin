@@ -22,8 +22,8 @@ public class PluginUtils {
 
     @NotNull
     public static HttpURLConnection fetchBackend(String uuid, String guild, String role, String staff, String supporter) throws IOException {
-        URL url = new URL("https://link.samifying.com/api/user/" + uuid +
-                "?guild=" + guild + "&role=" + role + "&staff=" + staff + "&supporter=" + supporter);
+        URL url = new URL("https://link.samifying.com/api/user/" + guild + "/" + role + "/" + uuid +
+                "?moderator=" + staff + "&supporter=" + supporter);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         return connection;

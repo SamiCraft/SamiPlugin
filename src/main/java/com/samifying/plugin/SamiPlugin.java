@@ -4,13 +4,14 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import com.samifying.plugin.models.BackendData;
 import com.samifying.plugin.commands.DiscordCommand;
 import com.samifying.plugin.commands.LookupCommand;
 import com.samifying.plugin.commands.LoreCommand;
 import com.samifying.plugin.listeners.CustomMobs;
 import com.samifying.plugin.listeners.DiscordLogs;
 import com.samifying.plugin.listeners.LoginEvent;
+import com.samifying.plugin.models.BackendData;
+import lombok.Getter;
 import net.luckperms.api.LuckPerms;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
 public final class SamiPlugin extends JavaPlugin {
 
     public static final String SAMI_USER_ID = "179261209529417729";
@@ -151,7 +153,7 @@ public final class SamiPlugin extends JavaPlugin {
                                  String title, @NotNull WebhookEmbedBuilder builder) {
         webhook.send(new WebhookMessageBuilder()
                 .setUsername(player.getName())
-                .setAvatarUrl("https://crafatar.com/avatars/" + player.getUniqueId() + "?default=MHF_Steve")
+                .setAvatarUrl("https://visage.surgeplay.com/face/" + player.getUniqueId())
                 .addEmbeds(builder
                         .setColor(color)
                         .setAuthor(new WebhookEmbed.EmbedAuthor(data.getNickname(), data.getAvatar(), null))
@@ -168,13 +170,5 @@ public final class SamiPlugin extends JavaPlugin {
                 .setDescription("**" + message + "**")
                 .setTimestamp(Instant.now())
                 .build());
-    }
-
-    public LuckPerms getPerms() {
-        return perms;
-    }
-
-    public Economy getEconomy() {
-        return economy;
     }
 }
